@@ -3,7 +3,7 @@ mongoose.set("strictQuery", false);
 
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGO_LOCAL_URI, {
+    const conn = await mongoose.connect(process.env.MONGO_URL, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
@@ -12,7 +12,7 @@ const connectDB = async () => {
     console.log(error);
     process.exit(1);
   }
-//   mongoose.connect(process.env.MONGO_URI,{
+//   mongoose.connect(process.env.MONGO_URL,{
 //           useNewUrlParser: true,
 //           useUnifiedTopology: true,
 //         }).then(()=>{
