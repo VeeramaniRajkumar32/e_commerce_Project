@@ -38,7 +38,7 @@ const productSchema = new mongoose.Schema({
     stock: {
         type: Number,
         required: [true, "Please enter the product stack"],
-        maxLength: [20, "Product stack cannot exceed "]
+        maxLength: [20, "Product stack cannot exceed"]
     },
     numOfReviews: {
         type: Number,
