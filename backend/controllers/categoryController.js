@@ -1,3 +1,4 @@
+const catchAsyncError = require("../middleware/catchAsyncError");
 const category = require("../models/categoryModel");
 const ErrorHandler = require("../utils/errorHandler");
 
@@ -15,7 +16,7 @@ exports.getCategory = async (req, res, next) => {
 	}
 };
 
-exports.getSingleCategory = async (req, res, next) => {
+exports.getSingleCategory = catchAsyncError(async (req, res, next) => {
 	const categories = await category.findById(req.params.id)
 	if(!categories){
 		return next(new ErrorHandler("Category not found", 404))
@@ -26,21 +27,16 @@ exports.getSingleCategory = async (req, res, next) => {
 			message: "ok"
 		})
 	}
-};
+})
 
-exports.newCategory = async(req, res, next) => {
-	if(!req.body){
-		res.status(400).json({
-			success: false,
-			message: "Enter the category name"
-		})
+exports.newCategory = catchAsyncError(async (req, res, next) => {
+	const name = req.body.name
+	if(!name){
+		return next(new ErrorHandler("Enter the category name", 400))
 	}else{
-		const categorySelect = await category.findOne(req.body.name)
-		if(categorySelect){
-			res.status(400).json({
-				success: false,
-				message: "Category already exist"
-			})
+		let categoryFind = await category.findOne({name})
+		if(categoryFind){
+			return next(new ErrorHandler("Category already exist", 400))
 		}else{
 			await category.create(req.body)
 			res.status(200).json({
@@ -49,9 +45,9 @@ exports.newCategory = async(req, res, next) => {
 			})
 		}
 	}
-};
+})
 
-exports.updateCategory = async (req, res, next) => {
+exports.updateCategory = catchAsyncError(async (req, res, next) => {
 	let categories = await category.findById(req.params.id);
 	if(!categories){
 		return next(new ErrorHandler("Category not found", 404))
@@ -66,9 +62,9 @@ exports.updateCategory = async (req, res, next) => {
 			message: "ok"
 		})
 	}
-};
+})
 
-exports.deleteCategory = async (req, res, next) => {
+exports.deleteCategory = catchAsyncError(async (req, res, next) => {
 	const categories = await category.findById(req.params.id)
     if(!categories){
 		return next(new ErrorHandler("Category not found", 404))
@@ -79,4 +75,4 @@ exports.deleteCategory = async (req, res, next) => {
             message: "ok"
         })
     }
-};
+})
