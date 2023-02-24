@@ -1,5 +1,5 @@
-const catchAsyncError = require("../middleware/catchAsyncError");
 const category = require("../models/categoryModel");
+const catchAsyncError = require("../middleware/catchAsyncError");
 const ErrorHandler = require("../utils/errorHandler");
 
 exports.getCategory = async (req, res, next) => {

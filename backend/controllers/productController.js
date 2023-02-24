@@ -1,9 +1,12 @@
 const product = require("../models/productModel");
 const ErrorHandler = require("../utils/errorHandler");
-const catchAsyncError = require('../middleware/catchAsyncError')
+const catchAsyncError = require('../middleware/catchAsyncError');
+const APIFeatures = require("../utils/apiFeatures");
 
 exports.getProduct = async (req, res, next) => {
-    const products = await product.find()
+    const resultPerPage = 1;
+    const apiFeatures = new APIFeatures(product.find(), req.query).search().filter().paginate(resultPerPage)
+    const products = await apiFeatures.query;
     if(!products){
         return next(new ErrorHandler("Product not found", 404))
     }else{
