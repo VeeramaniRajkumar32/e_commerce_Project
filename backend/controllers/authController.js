@@ -4,7 +4,6 @@ const catchAsyncError = require("../middleware/catchAsyncError");
 const ErrorHandler = require("../utils/errorHandler");
 const { getJwtToken } = require("../middleware/jwtToken");
 
-
 exports.register = catchAsyncError(async (req, res) => {
     const { name, email, password, avatar } = req.body;
     const findUser = await user.findOne({email: email});
@@ -21,7 +20,7 @@ exports.register = catchAsyncError(async (req, res) => {
         });
         let id =  await (await newUser.save())._id
         const token = getJwtToken({id:id})
-        res.cookie("token", token, { expires: new Date(Date.now() + 900000), httpOnly: true })
+        res.cookie("token", token, { expires: new Date(Date.now() + 7 * 24 * 60 * 1000), httpOnly: true })
             .json({
                 success: true,
                 user: newUser,
@@ -48,7 +47,7 @@ exports.login = catchAsyncError(async (req, res, next) => {
         let id =  await findUser._id
         const token = getJwtToken(id)
         user.token = token
-        res.cookie("token", token, { expires: new Date(Date.now() + 900000), httpOnly: true })
+        res.cookie("token", token, { expires: new Date(Date.now() + 7 * 24 * 60 * 1000), httpOnly: true })
         .json({
                 success: true,
                 token
